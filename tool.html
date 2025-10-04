@@ -3,38 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BJC Tool</title>
+  <title>🔐 BJC License Validator</title>
   <style>
     body {
-      background: #000;
-      color: #0f0;
-      font-family: monospace;
+      font-family: "Poppins", sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
       text-align: center;
-      padding-top: 80px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      width: 250px;
+      text-align: center;
+      font-size: 16px;
+      outline: none;
     }
     button {
-      background: #0f0;
-      color: #000;
-      padding: 10px 20px;
+      margin-top: 15px;
+      padding: 12px 25px;
       border: none;
       border-radius: 10px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0062d1;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 15px;
     }
   </style>
 </head>
 <body>
-  <h1>✅ License Verified</h1>
-  <p>Welcome to the BJC Tool by Junjun Cruz!</p>
-  <button onclick="logout()">Logout</button>
+  <h1>🔐 BJC License Validator</h1>
+
+  <input type="text" id="licenseKey" placeholder="Enter your license key" />
+  <button onclick="validateLicense()">Validate</button>
+
+  <p class="message" id="message">⚠️ Please enter a license key.</p>
 
   <script>
-    // Security check
-    const valid = localStorage.getItem('bjc_license_valid');
-    if (valid !== 'true') {
-      window.location.href = 'index.html';
+    function validateLicense() {
+      const keyInput = document.getElementById("licenseKey").value.trim();
+      const message = document.getElementById("message");
+
+      if (!keyInput) {
+        message.textContent = "⚠️ Please enter a license key.";
+        return;
+      }
+
+      fetch("https://raw.githubusercontent.com/bjchack/bjcvps/main/licenses.json")
+        .then(response => response.json())
+        .then(data => {
+          const found = data.licenses.find(l => l.key === keyInput);
+          if (found) {
+            localStorage.setItem("bjc_license_valid", "true");
+            alert("✅ License valid! Welcome " + found.owner);
+            window.location.href = "tool.html";
+          } else {
+            message.textContent = "❌ Invalid or expired license.";
+          }
+        })
+        .catch(error => {
+          message.textContent = "⚠️ Error loading license data.";
+          console.error(error);
+        });
     }
 
-    function logout() {
-      localStorage.removeItem('bjc_license_valid');
+    // Auto-redirect kung may valid license na dati
+    if (localStorage.getItem("bjc_license_valid") === "true") {
+      window.location.href = "tool.html";
+    }
+  </script>
+</body>
+</html>      localStorage.removeItem('bjc_license_valid');
       window.location.href = 'index.html';
     }
   </script>
