@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BJC License Validator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+    input {
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #1e90ff;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover { background: #007bff; }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔐 BJC License Validator</h2>
+  <input type="text" id="licenseInput" placeholder="Enter your license key"><br>
+  <button onclick="checkLicense()">Validate</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    async function checkLicense() {
+      const key = document.getElementById('licenseInput').value.trim();
+      const resultDiv = document.getElementById('result');
+
+      if (!key) {
+        resultDiv.innerHTML = '⚠️ Please enter a license key.';
+        return;
+      }
+
+      try {
+        const res = await fetch("https://raw.githubusercontent.com/bjchack/bjcvps/main/licenses.json");
+        const data = await res.json();
+        const found = data.licenses.find(l => l.key === key && l.status === "active");
+
+        if (found) {
+          resultDiv.innerHTML = `✅ Valid license!<br>Owner: <b>${found.owner}</b><br>Expires: ${found.expiry}`;
+        } else {
+          resultDiv.innerHTML = '❌ Invalid or used license key.';
+        }
+      } catch (err) {
+        resultDiv.innerHTML = '⚠️ Failed to connect to license server.';
+      }
+    }
+  </script>
+</body>
+</html>
