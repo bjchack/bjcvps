@@ -1,1 +1,18 @@
-yes
+{
+  "licenses": [
+    {
+      "key": "BJC-001-ABC123",
+      "status": "active",
+      "owner": "Jun Cruz",
+      "created": "2025-10-04",
+      "expiry": "2026-10-04"
+    },
+    {
+      "key": "BJC-002-XYZ999",
+      "status": "used",
+      "owner": "Tester",
+      "created": "2025-09-20",
+      "expiry": "2026-09-20"
+    }
+  ]
+}
