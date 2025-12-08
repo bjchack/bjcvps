@@ -1,12 +1,5 @@
-[
-  {
-    "title": "Bad Actor (2024)",
-    "img": "https://image.tmdb.org/t/p/original/pQZ1K2rIDqXS3.jpg",
-    "src": "http://103.145.232.246/Data/movies/Hollywood/2024/Bad%20Actor%20A%20Hollywood%20Ponzi%20Scheme%20%282024%29/Bad.Actor.A.Hollywood.Ponzi.Scheme.2024.720p.WEBRip.x264.AAC-%5BYTS.MX%5D.mp4"
-  },
-  {
-    "title": "New Movie 2025",
-    "img": "https://image.tmdb.org/t/p/original/NEW_POSTER.jpg",
-    "src": "http://YOUR_NEW_MOVIE.mp4"
-  }
-]
+{
+  "title": "New Movie 2025",
+  "img": "https://image.tmdb.org/t/p/original/NEW_POSTER.jpg",
+  "url": "http://103.145.232.246/Data/movies/Hollywood/2024/Bad%20Actor%20A%20Hollywood%20Ponzi%20Scheme%20%282024%29/Bad.Actor.A.Hollywood.Ponzi.Scheme.2024.720p.WEBRip.x264.AAC-%5BYTS.MX%5D.mp4"
+}
