@@ -38,7 +38,7 @@ button{
 }
 </style>
 
-<!-- LICENSE DATA -->
+<!-- License Data -->
 <script src="license.js"></script>
 </head>
 <body>
@@ -51,15 +51,15 @@ button{
 </div>
 
 <script>
-if (typeof LICENSES === "undefined") {
-    alert("License data not loaded!");
-}
+// Read redirect URL from query param
+const params = new URLSearchParams(window.location.search);
+const redirectURL = params.get("redirect") || "index.html";
 
 // Generate Device ID
 function getDeviceID() {
     let id = localStorage.getItem("bjc_device_id");
     if(!id){
-        id = "dev-" + Math.random().toString(36).substr(2,16);
+        id = "dev-" + Math.random().toString(36).substr(2, 16);
         localStorage.setItem("bjc_device_id", id);
     }
     return id;
@@ -79,10 +79,8 @@ function login() {
     for (let lic of LICENSES) {
         if (lic.code === input) {
 
-            // Device lock (per browser/device)
-            if (lic.device === null) {
-                lic.device = deviceID; // first time login
-            }
+            // First time login, lock device
+            if (!lic.device) lic.device = deviceID;
 
             if (lic.device !== deviceID) {
                 alert("LICENSE LOCKED TO ANOTHER DEVICE!");
@@ -91,7 +89,6 @@ function login() {
 
             const now = new Date();
             const exp = new Date(lic.expire);
-
             if (now > exp) {
                 alert("LICENSE EXPIRED!");
                 return;
@@ -107,10 +104,13 @@ function login() {
         return;
     }
 
-    alert("LOGIN SUCCESS!");
+    // Save login locally
     localStorage.setItem("bjc_logged", "1");
     localStorage.setItem("bjc_code", input);
-    window.location.href = "main.html"; // palitan kung ano homepage mo
+    localStorage.setItem("bjc_device", deviceID);
+
+    // Redirect to HopWeb movies.html
+    window.location.href = redirectURL;
 }
 </script>
 
