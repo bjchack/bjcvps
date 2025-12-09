@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BJC Prime Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {margin:0;background:#000;color:#fff;font-family:Arial;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 20px;}
+h1 {font-size:26px;margin-bottom:25px;color:#e50914;text-align:center;}
+.inputBox {width:100%;max-width:300px;margin-bottom:15px;}
+.inputBox input {width:100%;padding:12px;border-radius:8px;background:#111;color:white;border:1px solid #333;text-align:center;}
+#loginBtn {width:100%;max-width:300px;padding:13px;font-size:17px;font-weight:bold;background:#e50914;border:none;border-radius:8px;cursor:pointer;}
+#error {margin-top:10px;color:#ff6666;font-size:14px;display:none;text-align:center;max-width:300px;}
+</style>
+</head>
+<body>
+
+<h1>BJC PRIME</h1>
+
+<div class="inputBox">
+    <input type="text" id="code" placeholder="Enter Access Code">
+</div>
+
+<button id="loginBtn" onclick="login()">LOGIN</button>
+<div id="error"></div>
+
+<!-- LOAD THE LICENSE JS -->
+<script src="license.js"></script>
+
+<script>
+function getDeviceID() {
+    let id = localStorage.getItem("bjc_device_id");
+    if(!id){
+        id = "dev-" + Math.random().toString(36).substr(2, 16);
+        localStorage.setItem("bjc_device_id", id);
+    }
+    return id;
+}
+
+function showError(txt){
+    const e = document.getElementById("error");
+    e.innerText = txt;
+    e.style.display = "block";
+}
+
+async function login(){
+    const code = document.getElementById("code").value.trim();
+    const device = getDeviceID();
+
+    if(!code){
+        showError("Please enter your access code.");
+        return;
+    }
+
+    // Ensure LICENSES is loaded
+    if (typeof LICENSES === "undefined") {
+        showError("License data not loaded.");
+        return;
+    }
+
+    const user = LICENSES.find(x => x.code === code);
+    if(!user){
+        showError("Invalid code.");
+        return;
+    }
+
+    const expire = new Date(user.expire + " 23:59:59");
+    if(expire < new Date()){
+        showError("Your code has expired.");
+        return;
+    }
+
+    // DEVICE LOCK — still local-only
+    if(!user.device){
+        user.device = device;
+        localStorage.setItem("bjc_device", device);
+    }
+    else if(user.device !== device){
+        showError("This code is already used on another device.");
+        return;
+    }
+
+    localStorage.setItem("bjc_logged", "1");
+    localStorage.setItem("bjc_code", code);
+
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
